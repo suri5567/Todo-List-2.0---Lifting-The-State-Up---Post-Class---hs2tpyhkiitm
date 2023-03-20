@@ -7,7 +7,7 @@ const ListRender = (props) => {
         return (
           <div className="box" key={list.number}>
             <div className="task">
-              {list.title} ({list.date.toLocaleDateString()})
+              {list.title} ({list.date})
             </div>
           </div>
         );
@@ -17,4 +17,3 @@ const ListRender = (props) => {
 };
 
 export default ListRender;
-
