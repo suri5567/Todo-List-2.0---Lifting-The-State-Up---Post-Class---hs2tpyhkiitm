@@ -1,55 +1,46 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 
 const Inbox = (props) => {
-  const [newTask, setNewTask] = useState(false);
-
-  const titleRef = useRef(null);
-  const calendarRef = useRef(null);
-
-  const newTaskHandler = (e) => {
-    setNewTask(true);
-  };
-
-  const addHandler = (e) => {
+ 
+  const [newTask, setTask] = useState(false);
+ 
+  const [ele, setele] = useState(null);
+  const [added, setadded] =useState(4);
+  const text = useRef(null);
+  const ddate = useRef(null);
+  function updateText(e){
     e.preventDefault();
-    if (titleRef.current.value === "") {
-      window.alert("Task cannot be empty");
-      return;
+    setele({number: added, title: text.current.value, date: (new Date(ddate.current.value)).toLocaleDateString("en-US")})
+}
+
+useEffect(()=>{
+    if (ele) {
+        props.append(ele);
     }
-    let newObj = {
-      number: props.list.length + 1,
-      title: titleRef.current.value,
-      date: new Date(calendarRef.current.value),
-    };
-    props.append(newObj);
-    setNewTask(false);
-  };
-
-  const cancelHandler = (e) => {
-    setNewTask(false);
-  };
-
+},[ele])
+  
   return (
+    
     <div>
       <h3>Inbox</h3>
       {!newTask && (
-        <button className="new" onClick={newTaskHandler} id='add-new'>
+        <button className="new" onClick={()=>{setTask(true)}} id='add-new'>
           +Add New
         </button>
       )}
       {newTask && (
         <form className="newtask-box">
-          <input type="text" id="title" ref={titleRef}></input>
+          <input type="text" id="title" ref={text}></input>
           <div className="buttons">
-            <button className="new" id="add-list" onClick={addHandler}>
+            <button className="new" id="add-list" onClick={(e)=>{updateText(e)}}>
               Add Task
             </button>
-            <button className="new" onClick={cancelHandler}>
+            <button className="new" onClick={()=>{setTask(false)}}>
               Cancel
             </button>
             <input
               type="date"
-              ref={calendarRef}
+              ref={ddate}
               defaultValue="2022-09-27"
               id="date"
             ></input>
@@ -61,7 +52,7 @@ const Inbox = (props) => {
           return (
             <div className="box" key={list.number}>
               <div className="task">
-                {list.title} ({list.date.toLocaleDateString()})
+                {list.title} ({list.date})
               </div>
             </div>
           );
@@ -72,4 +63,3 @@ const Inbox = (props) => {
 };
 
 export default Inbox;
-
